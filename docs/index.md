@@ -7,11 +7,14 @@ You’ll find projects where I reverse-engineer devices, design and print compon
 
 This space serves as a project log — a place to document ideas, share what I learn, and explore new challenges along the way.
 
----
+
+<!-- RECENTLY_UPDATED_DOCS -->
+
+<!-- ---
 
 ## Start here
 
 - Read the blog: [Blog home](blog/index.md)
 - Browse all posts: [Archives](blog/archive/2026)
 
----
+--- -->

@@ -1,0 +1,4 @@
+mkdocs
+mkdocs-materialx
+mkdocs-glightbox
+mkdocs-recently-updated-docs
