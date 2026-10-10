@@ -15,6 +15,7 @@ nav = [
 name = "material"
 variant = "classic"
 favicon = "assets/favicon_dark.svg"
+extra_css = ["assets/stylesheets/extra.css"]
 
 [project.theme.font]
 text = "Inter"
