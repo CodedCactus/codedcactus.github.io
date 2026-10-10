@@ -15,7 +15,7 @@ This space serves as a project log — a place to document ideas, share what I l
 <style>
 .article-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 20px;
     margin: 20px 0;
 }
@@ -39,8 +39,8 @@ This space serves as a project log — a place to document ideas, share what I l
 
 .card-header {
     display: flex;
-    justify-content: space-between;
-    align-items: baseline;
+    flex-direction: column;
+    gap: 6px;
     text-decoration: none;
 }
 
@@ -48,7 +48,6 @@ This space serves as a project log — a place to document ideas, share what I l
     font-weight: 700;
     line-height: 1.4;
     color: var(--md-typeset-color, inherit);
-    margin-right: 12px;
     font-size: 1.05rem;
 }
 
@@ -56,8 +55,6 @@ This space serves as a project log — a place to document ideas, share what I l
     font-size: 0.84em;
     color: rgba(100, 100, 100, 0.6);
     white-space: nowrap;
-    margin-right: 10px;
-    transform: translateY(-1px);
 }
 
 .card-header:hover .card-title,
@@ -78,8 +75,8 @@ This space serves as a project log — a place to document ideas, share what I l
     flex: 1;
     min-width: 0;
     color: rgba(142, 142, 142, 1);
-    font-size: 0.8rem;
-    line-height: 1.6;
+    font-size: 0.75rem;
+    line-height: 1.5;
     letter-spacing: 0.02rem;
     word-break: break-word;
     
@@ -130,6 +127,11 @@ This space serves as a project log — a place to document ideas, share what I l
 [data-md-color-scheme="slate"] .card-cover {
     background: rgba(142, 142, 142, 0.15);
 }
+
+.article-card.placeholder {
+    visibility: hidden;
+    pointer-events: none;
+}
 </style>
 
 <div id="latest-posts-container" class="article-grid"></div>
@@ -147,9 +149,19 @@ fetch('search.json')
       const latestPosts = blogPosts.slice(0, 3);
       const container = document.getElementById('latest-posts-container');
       
-      const cardsHtml = latestPosts.map(post => {
-        const dateMatch = post.text.match(/<time[^>]*>([^<]+)<\/time>/);
-        const date = dateMatch ? dateMatch[1] : '';
+      let cardsHtml = latestPosts.map(post => {
+        // Extract date from URL: blog/YYYY/MM/DD/slug/
+        const urlMatch = post.location.match(/^blog\/(\d{4})\/(\d{2})\/(\d{2})\//);
+        let date = '';
+        let datetime = '';
+        if (urlMatch) {
+          const [, year, month, day] = urlMatch;
+          const dateObj = new Date(`${year}-${month}-${day}`);
+          if (!isNaN(dateObj.getTime())) {
+            date = dateObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+            datetime = `${year}-${month}-${day}`;
+          }
+        }
         
         // Extract first image as cover
         const imgMatch = post.text.match(/<img[^>]+src=["']([^"']+)["']/);
@@ -158,15 +170,6 @@ fetch('search.json')
         // Extract summary (first paragraph, stripped of tags)
         const textContent = post.text.replace(/<[^>]*>/g, ' ');
         const summary = textContent.trim().substring(0, 200) + '...';
-        
-        // Parse date for datetime attribute
-        let datetime = '';
-        if (date) {
-          const parsed = new Date(date.replace(/(\w+) (\d+), (\d+)/, '$1 $2, $3'));
-          if (!isNaN(parsed.getTime())) {
-            datetime = parsed.toISOString().split('T')[0];
-          }
-        }
         
         return `
           <article class="article-card">
@@ -181,6 +184,21 @@ fetch('search.json')
           </article>
         `;
       }).join('');
+      
+      // Add placeholder cards to maintain 3-column grid
+      const placeholdersNeeded = 3 - latestPosts.length;
+      for (let i = 0; i < placeholdersNeeded; i++) {
+        cardsHtml += `
+          <article class="article-card placeholder" aria-hidden="true">
+            <div class="card-header">
+              <div class="card-title placeholder-text"></div>
+            </div>
+            <div class="card-body">
+              <div class="card-summary placeholder-text"></div>
+            </div>
+          </article>
+        `;
+      }
       
       container.innerHTML = cardsHtml;
     }
