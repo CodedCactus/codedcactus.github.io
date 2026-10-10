@@ -50,14 +50,6 @@ plugins:
       categories_pagination_per_page: 10
   - tags:
       pagination_per_page: 10
-  - recently-updated:
-      limit: 2          # Limit the number of docs displayed
-      exclude:           # List of excluded files (support unix shell-style wildcards)
-        - index.md       # Exclude specific file
-        - '*/index.md'   # Exclude all index.md files in any subfolders
-        - tags.md
-        - 'archive'
-        # - blog/*         # Exclude all files in blog folder, including subfolders
 
 extra:
   social:
