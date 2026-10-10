@@ -3,8 +3,7 @@ name = "codedcactus-github-io"
 version = "0.1.0"
 requires-python = ">=3.13"
 dependencies = [
-    "mkdocs>=1.6.1",
+    "zensical>=0.0.69",
+    "mkdocs-material>=9.7.7",
     "mkdocs-glightbox>=0.5.2",
-    "mkdocs-materialx[imaging]>=10.2.0",
-    "mkdocs-recently-updated-docs>=1.7",
 ]
